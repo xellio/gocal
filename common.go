@@ -18,5 +18,9 @@ var (
 		FRIDAY:    5,
 		SATURDAY:  6,
 	}
-	FIRST_DAY_OF_WEEK = 1
+	FIRST_DAY_OF_WEEK = 0
+
+	MARK_TODAY    = true
+	COLOR_DEFAULT = "29"
+	COLOR_TODAY   = "31"
 )
