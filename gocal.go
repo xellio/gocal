@@ -26,7 +26,7 @@ func (c *Cal) init() {
 	}
 
 	if c.ToDate.IsZero() {
-		c.ToDate = c.FromDate
+		c.ToDate = c.FromDate.AddDate(0, 1, 0)
 	}
 
 	if c.ColorToday == "" {
@@ -39,6 +39,17 @@ func (c *Cal) init() {
 
 	if c.ColorHighlight == "" {
 		c.ColorHighlight = COLOR_HIGHLIGHT
+	}
+
+	if len(c.Marker) > 0 {
+		// filter marker in timeframe
+		var filteredMarker []time.Time
+		for _, d := range c.Marker {
+			if d.After(c.FromDate) && d.Before(c.ToDate) {
+				filteredMarker = append(filteredMarker, d)
+			}
+		}
+		c.Marker = filteredMarker
 	}
 }
 
