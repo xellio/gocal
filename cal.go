@@ -3,6 +3,7 @@ package gocal
 import (
 	"fmt"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -30,7 +31,7 @@ func calculateWeeks(firstOfMonth time.Time) ([][]int, error) {
 	var weeks [][]int
 
 	var days []int
-	for i := 0; i < int(firstOfMonth.Weekday()); i++ {
+	for i := 0; i < int(firstOfMonth.Weekday())-FIRST_DAY_OF_WEEK; i++ {
 		days = append(days, 0)
 	}
 
@@ -58,11 +59,15 @@ func printCalendar(weeks [][]int) error {
 }
 
 func printWeekdayHeader() error {
-	var weekdayHeader string
-	for day, _ := range DAYS {
-		weekdayHeader += day + " "
+
+	var orderedWeekDays []string
+	orderedWeekDays = DAYS[FIRST_DAY_OF_WEEK:len(DAYS)]
+
+	if FIRST_DAY_OF_WEEK != 0 {
+		orderedWeekDays = append(orderedWeekDays, DAYS[0:FIRST_DAY_OF_WEEK]...)
 	}
-	fmt.Println(weekdayHeader)
+
+	fmt.Println(strings.Join(orderedWeekDays, " "))
 	return nil
 }
 
