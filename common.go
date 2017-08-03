@@ -21,8 +21,7 @@ var (
 
 	FIRST_DAY_OF_WEEK = 1
 
-	MARK_TODAY    = true
-	COLOR_DEFAULT = "29"
-	COLOR_TODAY   = "31"
-	SHOW_HEADER   = true
+	COLOR_DEFAULT   = "29"
+	COLOR_TODAY     = "31"
+	COLOR_HIGHLIGHT = "32"
 )
