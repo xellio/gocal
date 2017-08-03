@@ -24,4 +24,5 @@ var (
 	MARK_TODAY    = true
 	COLOR_DEFAULT = "29"
 	COLOR_TODAY   = "31"
+	SHOW_HEADER   = true
 )

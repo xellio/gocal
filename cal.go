@@ -8,9 +8,11 @@ import (
 )
 
 func Print(date time.Time) error {
-	fmt.Println("--------------------------------")
-	fmt.Println(date.Month(), date.Year())
-	fmt.Println("--------------------------------")
+	if SHOW_HEADER {
+		fmt.Println("---------------------------")
+		fmt.Println(date.Day(), date.Month(), date.Year(), strconv.Itoa(date.Hour())+":"+strconv.Itoa(date.Minute()))
+		fmt.Println("---------------------------")
+	}
 
 	dateYear, dateMonth, _ := date.Date()
 	dateLocation := date.Location()
