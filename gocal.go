@@ -76,16 +76,19 @@ func (c *Cal) Print() error {
 	return nil
 }
 
-func (c *Cal) calculateWeeks(firstOfMonth time.Time) ([][]int, error) {
-	var weeks [][]int
+func (c *Cal) calculateWeeks(firstOfMonth time.Time) ([][]time.Time, error) {
+	var weeks [][]time.Time
 
-	var days []int
-	for i := 0; i < int(firstOfMonth.Weekday())-c.FirstDayOfWeek; i++ {
-		days = append(days, 0)
+	var days []time.Time
+
+	slotsToFill := int(firstOfMonth.Weekday()) - c.FirstDayOfWeek
+	for i := slotsToFill; i > 0; i-- {
+		dateToAppend := firstOfMonth.AddDate(0, 0, -i)
+		days = append(days, dateToAppend)
 	}
 
 	for d := firstOfMonth; d.Month() == firstOfMonth.Month(); d = d.AddDate(0, 0, 1) {
-		days = append(days, d.Day())
+		days = append(days, d)
 		if len(days) == 7 {
 			weeks = append(weeks, days)
 			days = nil
@@ -98,7 +101,7 @@ func (c *Cal) calculateWeeks(firstOfMonth time.Time) ([][]int, error) {
 	return weeks, nil
 }
 
-func (c *Cal) printCalendar(weeks [][]int) error {
+func (c *Cal) printCalendar(weeks [][]time.Time) error {
 
 	if err := c.printWeekdayHeader(); err != nil {
 		return err
@@ -120,21 +123,21 @@ func (c *Cal) printWeekdayHeader() error {
 	return nil
 }
 
-func (c *Cal) printWeeks(weeks [][]int) error {
+func (c *Cal) printWeeks(weeks [][]time.Time) error {
 	today := time.Now()
 	for _, days := range weeks {
 		for _, day := range days {
-			dayToPrint := strconv.Itoa(day)
-			if day == 0 {
-				dayToPrint = " "
+			dayToPrint := strconv.Itoa(day.Day())
+			if day.Month() != c.FromDate.Month() {
+				dayToPrint = "  "
 			}
-			if day < 10 {
+			if day.Day() < 10 {
 				dayToPrint = "  " + dayToPrint
 			} else {
 				dayToPrint = " " + dayToPrint
 			}
 
-			if today.Day() == day {
+			if today.Day() == day.Day() {
 				fmt.Printf("\033["+c.ColorToday+"m%s \033[0m", dayToPrint)
 			} else {
 				fmt.Printf("\033["+c.ColorDefault+"m%s \033[0m", dayToPrint)
