@@ -17,6 +17,7 @@ type Cal struct {
 	ColorToday     string
 	ColorHighlight string
 	Marker         []time.Time
+	monthsToPrint  []time.Time
 }
 
 func (c *Cal) init() {
@@ -53,26 +54,30 @@ func (c *Cal) init() {
 		}
 		c.Marker = filteredMarker
 	}
+
+	for d := c.FromDate; d.Month() <= c.ToDate.Month(); d = d.AddDate(0, 1, 0) {
+		c.monthsToPrint = append(c.monthsToPrint, d)
+	}
+
 }
 
 func (c *Cal) Print() error {
 	c.init()
-	if !c.HideHeader {
-		fmt.Println("---------------------------")
-		fmt.Println(c.FromDate.Day(), c.FromDate.Month(), c.FromDate.Year())
-		fmt.Println("---------------------------")
-	}
 
-	dateYear, dateMonth, _ := c.FromDate.Date()
-	dateLocation := c.FromDate.Location()
-	firstOfMonth := time.Date(dateYear, dateMonth, 1, 0, 0, 0, 0, dateLocation)
+	for _, month := range c.monthsToPrint {
+		if !c.HideHeader {
+			fmt.Println("---------------------------")
+			fmt.Println(month.Month(), month.Year())
+			fmt.Println("---------------------------")
+		}
 
-	weeks, err := c.calculateWeeks(firstOfMonth)
-	if err != nil {
-		return err
-	}
-	if err = c.printCalendar(weeks); err != nil {
-		return err
+		weeks, err := c.calculateWeeks(month)
+		if err != nil {
+			return err
+		}
+		if err = c.printCalendar(weeks); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -84,6 +89,11 @@ func (c *Cal) calculateWeeks(firstOfMonth time.Time) ([][]time.Time, error) {
 	var days []time.Time
 
 	slotsToFill := int(firstOfMonth.Weekday()) - c.FirstDayOfWeek
+	// if the 1st is a sunday and week starts on monday, we have to fill 6 slots
+	// slotsToFill (in this case) is -1
+	if slotsToFill < 0 {
+		slotsToFill = slotsToFill + 7
+	}
 	for i := slotsToFill; i > 0; i-- {
 		dateToAppend := firstOfMonth.AddDate(0, 0, -i)
 		days = append(days, dateToAppend)
@@ -127,14 +137,12 @@ func (c *Cal) printWeekdayHeader() error {
 
 func (c *Cal) printWeeks(weeks [][]time.Time) error {
 	today := time.Now()
+
 	for _, days := range weeks {
 		for _, day := range days {
 			printFormat := "\033[" + c.ColorDefault + "m%s \033[0m"
 			dayToPrint := " " + strconv.Itoa(day.Day())
 
-			if day.Month() != c.FromDate.Month() {
-				dayToPrint = "   "
-			}
 			if day.Day() < 10 {
 				dayToPrint = " " + dayToPrint
 			}
@@ -143,7 +151,9 @@ func (c *Cal) printWeeks(weeks [][]time.Time) error {
 				printFormat = "\033[" + c.ColorHighlight + "m%s \033[0m"
 			}
 
-			if today.Day() == day.Day() {
+			if today.Day() == day.Day() &&
+				today.Month() == day.Month() &&
+				today.Year() == day.Year() {
 				printFormat = "\033[" + c.ColorToday + "m%s \033[0m"
 			}
 
