@@ -1,5 +1,7 @@
 ## gocal - a cli calendar presentation
 
+![gocal cli calendar](./gocal.png?raw=true "gocal cli calendar")
+
 ## Motivation
 Needed a calendar for my mk project - so here it is
 
