@@ -50,7 +50,7 @@ By default, a week starts with Sunday. If you want to start with Monday (or any 
 Setting this flag to true, the todays date is highlighted in the Cal.ColorToday color.
 #### Cal.HideHeader
 Setting this flag to false will hide the output-header and display only the calendar without any other information.
-#####Example:
+Example:
 ```
 MON TUE WED THU FRI SAT SUN
       1   2   3   4   5   6 
@@ -61,12 +61,12 @@ MON TUE WED THU FRI SAT SUN
 ```
 #### Cal.ColorDefault
 Default: 29
-Specify the default output color ( [ANSI Color Codes]https://en.wikipedia.org/wiki/ANSI_escape_code )
+Specify the default output color ([ANSI Color Codes](https://en.wikipedia.org/wiki/ANSI_escape_code))
 #### Cal.ColorToday
 Default: 31
-Specify the highlight color for today ( [ANSI Color Codes]https://en.wikipedia.org/wiki/ANSI_escape_code )
+Specify the highlight color for today ([ANSI Color Codes](https://en.wikipedia.org/wiki/ANSI_escape_code))
 #### Cal.ColorHighlight
 Default: 32
-Specify the highlight color for dates passed in the Cal.Marker slice ( [ANSI Color Codes]https://en.wikipedia.org/wiki/ANSI_escape_code )
+Specify the highlight color for dates passed in the Cal.Marker slice ([ANSI Color Codes](https://en.wikipedia.org/wiki/ANSI_escape_code))
 #### Cal.Marker
 []time.Time slice of dates to highlight in the calendar.
