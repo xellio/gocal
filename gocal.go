@@ -161,7 +161,7 @@ func (c *Cal) printWeeks(weeks [][]time.Time) error {
 				printFormat = "\033[" + c.ColorHighlight + "m%s \033[0m"
 			}
 
-			if today.Day() == day.Day() &&
+			if c.MarkToday && today.Day() == day.Day() &&
 				today.Month() == day.Month() &&
 				today.Year() == day.Year() {
 				printFormat = "\033[" + c.ColorToday + "m%s \033[0m"
