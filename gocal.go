@@ -22,7 +22,8 @@ type Cal struct {
 func (c *Cal) init() {
 
 	if c.FromDate.IsZero() {
-		c.FromDate = time.Now()
+		today := time.Now()
+		c.FromDate = time.Date(today.Year(), today.Month(), 1, 0, 0, 0, 0, today.Location())
 	}
 
 	if c.ToDate.IsZero() {
@@ -127,24 +128,39 @@ func (c *Cal) printWeeks(weeks [][]time.Time) error {
 	today := time.Now()
 	for _, days := range weeks {
 		for _, day := range days {
-			dayToPrint := strconv.Itoa(day.Day())
+			printFormat := "\033[" + c.ColorDefault + "m%s \033[0m"
+			dayToPrint := " " + strconv.Itoa(day.Day())
+
 			if day.Month() != c.FromDate.Month() {
-				dayToPrint = "  "
+				dayToPrint = "   "
 			}
 			if day.Day() < 10 {
-				dayToPrint = "  " + dayToPrint
-			} else {
 				dayToPrint = " " + dayToPrint
 			}
 
-			if today.Day() == day.Day() {
-				fmt.Printf("\033["+c.ColorToday+"m%s \033[0m", dayToPrint)
-			} else {
-				fmt.Printf("\033["+c.ColorDefault+"m%s \033[0m", dayToPrint)
+			if len(c.Marker) > 0 && c.shouldBeMarked(day) {
+				printFormat = "\033[" + c.ColorHighlight + "m%s \033[0m"
 			}
+
+			if today.Day() == day.Day() {
+				printFormat = "\033[" + c.ColorToday + "m%s \033[0m"
+			}
+
+			fmt.Printf(printFormat, dayToPrint)
 
 		}
 		fmt.Print("\n")
 	}
 	return nil
+}
+
+func (c *Cal) shouldBeMarked(day time.Time) bool {
+	for _, marker := range c.Marker {
+		if marker.Day() == day.Day() &&
+			marker.Month() == day.Month() &&
+			marker.Year() == day.Year() {
+			return true
+		}
+	}
+	return false
 }
