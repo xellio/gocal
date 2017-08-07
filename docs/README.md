@@ -2,9 +2,6 @@
 
 ![gocal cli calendar](./gocal.png?raw=true "gocal cli calendar")
 
-## Motivation
-Needed a calendar for my mk project - so here it is
-
 ## Usage
 ```
 go get -u github.com/xellio/gocal
