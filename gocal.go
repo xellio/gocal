@@ -1,3 +1,6 @@
+/**
+ * package gocal
+ */
 package gocal
 
 import (
@@ -20,6 +23,8 @@ type Cal struct {
 	monthsToPrint  []time.Time
 }
 
+// initialize the Cal struct
+// set default values and collects/calculates data for printing
 func (c *Cal) init() {
 
 	if c.FromDate.IsZero() {
@@ -61,6 +66,7 @@ func (c *Cal) init() {
 
 }
 
+// Print the calendar
 func (c *Cal) Print() error {
 	c.init()
 
@@ -83,6 +89,7 @@ func (c *Cal) Print() error {
 	return nil
 }
 
+// Returns a slice containing another slice with all time.Time values for one week (line)
 func (c *Cal) calculateWeeks(firstOfMonth time.Time) ([][]time.Time, error) {
 	var weeks [][]time.Time
 
@@ -113,6 +120,7 @@ func (c *Cal) calculateWeeks(firstOfMonth time.Time) ([][]time.Time, error) {
 	return weeks, nil
 }
 
+// Triggers the printing of the calendar header and the weeks
 func (c *Cal) printCalendar(weeks [][]time.Time) error {
 
 	if err := c.printWeekdayHeader(); err != nil {
@@ -122,6 +130,7 @@ func (c *Cal) printCalendar(weeks [][]time.Time) error {
 	return nil
 }
 
+// Print the calendar header
 func (c *Cal) printWeekdayHeader() error {
 
 	var orderedWeekDays []string
@@ -135,6 +144,7 @@ func (c *Cal) printWeekdayHeader() error {
 	return nil
 }
 
+// Print the weeks
 func (c *Cal) printWeeks(weeks [][]time.Time) error {
 	today := time.Now()
 
@@ -165,6 +175,7 @@ func (c *Cal) printWeeks(weeks [][]time.Time) error {
 	return nil
 }
 
+// checks if the given time.Time is in the c.Marker slice
 func (c *Cal) shouldBeMarked(day time.Time) bool {
 	for _, marker := range c.Marker {
 		if marker.Day() == day.Day() &&
