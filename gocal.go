@@ -22,13 +22,14 @@ type Cal struct {
 func (c *Cal) init() {
 
 	if c.FromDate.IsZero() {
-		today := time.Now()
-		c.FromDate = time.Date(today.Year(), today.Month(), 1, 0, 0, 0, 0, today.Location())
+		c.FromDate = time.Now()
 	}
+	c.FromDate = time.Date(c.FromDate.Year(), c.FromDate.Month(), 1, 0, 0, 0, 0, c.FromDate.Location())
 
 	if c.ToDate.IsZero() {
 		c.ToDate = c.FromDate.AddDate(0, 1, 0)
 	}
+	c.ToDate = time.Date(c.ToDate.Year(), c.ToDate.Month()+1, 0, 0, 0, 0, 0, c.ToDate.Location())
 
 	if c.ColorToday == "" {
 		c.ColorToday = COLOR_TODAY
