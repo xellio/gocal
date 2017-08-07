@@ -61,12 +61,12 @@ MON TUE WED THU FRI SAT SUN
 ```
 #### Cal.ColorDefault
 Default: 29
-Specify the default output color ([ANSI Color Codes](https://en.wikipedia.org/wiki/ANSI_escape_code))
+Specify the default output color ([ANSI Color Codes](https://en.wikipedia.org/wiki/ANSI_escape_code#Colors))
 #### Cal.ColorToday
 Default: 31
-Specify the highlight color for today ([ANSI Color Codes](https://en.wikipedia.org/wiki/ANSI_escape_code))
+Specify the highlight color for today ([ANSI Color Codes](https://en.wikipedia.org/wiki/ANSI_escape_code#Colors))
 #### Cal.ColorHighlight
 Default: 32
-Specify the highlight color for dates passed in the Cal.Marker slice ([ANSI Color Codes](https://en.wikipedia.org/wiki/ANSI_escape_code))
+Specify the highlight color for dates passed in the Cal.Marker slice ([ANSI Color Codes](https://en.wikipedia.org/wiki/ANSI_escape_code#Colors))
 #### Cal.Marker
 []time.Time slice of dates to highlight in the calendar.
