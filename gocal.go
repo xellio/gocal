@@ -38,7 +38,7 @@ func (c *Cal) init() {
 	} else {
 		c.ToDate = time.Date(c.ToDate.Year(), c.ToDate.Month()+1, 0, 0, 0, 0, 0, c.ToDate.Location())
 	}
-	fmt.Println(c.ToDate)
+
 	if c.ColorToday == "" {
 		c.ColorToday = COLOR_TODAY
 	}
