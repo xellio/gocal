@@ -150,10 +150,15 @@ func (c *Cal) printWeekdayHeader() error {
 func (c *Cal) printWeeks(weeks [][]time.Time) error {
 	today := time.Now()
 
-	for _, days := range weeks {
+	for wc, days := range weeks {
 		for _, day := range days {
 			printFormat := "\033[" + c.ColorDefault + "m%s \033[0m"
 			dayToPrint := " " + strconv.Itoa(day.Day())
+
+			// first week-line, but day from previous month - print spaces instead of value
+			if wc == 0 && day.Day() > 7 {
+				dayToPrint = "   "
+			}
 
 			if day.Day() < 10 {
 				dayToPrint = " " + dayToPrint
