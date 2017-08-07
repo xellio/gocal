@@ -115,3 +115,7 @@ func TestShouldBeMarked(t *testing.T) {
 		}
 	}
 }
+
+func TestCalculateWeeks(t *testing.T) {
+	t.SkipNow()
+}
