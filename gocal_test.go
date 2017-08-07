@@ -5,19 +5,19 @@ import (
 	"time"
 )
 
-type testpairInitDate struct {
+type testpair struct {
 	cal      *Cal
 	expected *Cal
 }
 
-var testCasesInitDate = []testpairInitDate{
+var testCasesInitDate = []testpair{
 	{
-		testInitDateBuildCal("2017-09-11T11:11:11Z", ""),
-		testInitDateBuildCal("2017-09-01T00:00:00Z", "2017-09-30T00:00:00Z"),
+		buildCalForTestInitDate("2017-09-11T11:11:11Z", ""),
+		buildCalForTestInitDate("2017-09-01T00:00:00Z", "2017-09-30T00:00:00Z"),
 	},
 }
 
-func testInitDateBuildCal(fromDate string, toDate string) *Cal {
+func buildCalForTestInitDate(fromDate string, toDate string) *Cal {
 
 	fd, _ := time.Parse("2006-01-02T15:04:05Z", fromDate)
 	td, _ := time.Parse("2006-01-02T15:04:05Z", toDate)
@@ -33,6 +33,7 @@ func TestInitDate(t *testing.T) {
 		pair.cal.init()
 		if pair.cal.FromDate != pair.expected.FromDate {
 			t.Error(
+				t.Name(),
 				"\nFromDate:",
 				"\nGot", pair.cal.FromDate,
 				"\nExpected", pair.expected.FromDate,
@@ -42,6 +43,7 @@ func TestInitDate(t *testing.T) {
 
 		if pair.cal.ToDate != pair.expected.ToDate {
 			t.Error(
+				t.Name(),
 				"\nToDate:",
 				"\nGot", pair.cal.ToDate,
 				"\nExpected", pair.expected.ToDate,
@@ -49,5 +51,67 @@ func TestInitDate(t *testing.T) {
 			)
 		}
 
+	}
+}
+
+type testpairShouldBeMarked struct {
+	cal        *Cal
+	dateToMark string
+	expected   bool
+}
+
+var testCasesShouldBeMarked = []testpairShouldBeMarked{
+	{
+		buildCalForTestShouldBeMarked([]string{}),
+		"",
+		false,
+	},
+	{
+		buildCalForTestShouldBeMarked([]string{}),
+		"2017-08-14T09:30:00Z",
+		false,
+	},
+	{
+		buildCalForTestShouldBeMarked([]string{"2017-08-04T08:00:00Z", "2017-08-14T09:30:00Z", "2017-08-24T10:45:15Z", "2017-09-24T10:45:15Z"}),
+		"2017-08-14T09:30:00Z",
+		true,
+	},
+	{
+		buildCalForTestShouldBeMarked([]string{"2017-08-04T08:00:00Z"}),
+		"2017-08-04T18:00:00Z",
+		true,
+	},
+	{
+		buildCalForTestShouldBeMarked([]string{"2017-08-04T08:00:00Z", "2017-08-14T09:30:00Z", "2017-08-24T10:45:15Z", "2017-09-24T10:45:15Z"}),
+		"2018-08-14T09:30:00Z",
+		false,
+	},
+}
+
+func buildCalForTestShouldBeMarked(markerDates []string) *Cal {
+
+	var marker []time.Time
+	for _, d := range markerDates {
+		date, _ := time.Parse("2006-01-02T15:04:05Z", d)
+		marker = append(marker, date)
+	}
+
+	cal := new(Cal)
+	cal.Marker = marker
+
+	return cal
+}
+
+func TestShouldBeMarked(t *testing.T) {
+	for i, testcase := range testCasesShouldBeMarked {
+		dateToMark, _ := time.Parse("2006-01-02T15:04:05Z", testcase.dateToMark)
+		if mark := testcase.cal.shouldBeMarked(dateToMark); mark != testcase.expected {
+			t.Error(
+				t.Name(),
+				"\nGot", mark,
+				"\nExpected", testcase.expected,
+				"\nTestCase", i,
+			)
+		}
 	}
 }
