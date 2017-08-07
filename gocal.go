@@ -33,10 +33,12 @@ func (c *Cal) init() {
 	c.FromDate = time.Date(c.FromDate.Year(), c.FromDate.Month(), 1, 0, 0, 0, 0, c.FromDate.Location())
 
 	if c.ToDate.IsZero() {
-		c.ToDate = c.FromDate.AddDate(0, 1, 0)
+		//@todo: parse Marker slice for ToDate value
+		c.ToDate = c.FromDate.AddDate(0, 1, -1)
+	} else {
+		c.ToDate = time.Date(c.ToDate.Year(), c.ToDate.Month()+1, 0, 0, 0, 0, 0, c.ToDate.Location())
 	}
-	c.ToDate = time.Date(c.ToDate.Year(), c.ToDate.Month()+1, 0, 0, 0, 0, 0, c.ToDate.Location())
-
+	fmt.Println(c.ToDate)
 	if c.ColorToday == "" {
 		c.ColorToday = COLOR_TODAY
 	}
