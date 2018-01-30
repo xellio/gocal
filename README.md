@@ -1,6 +1,6 @@
 ## gocal - a cli calendar presentation written in go
 
-[Documentation](https://godoc.org/github.com/xellio/whois)
+[Documentation](https://godoc.org/github.com/xellio/gocal)
 
 ![gocal cli calendar](./gocal.png?raw=true "gocal cli calendar")
 
