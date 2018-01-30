@@ -1,6 +1,3 @@
-/**
- * package gocal
- */
 package gocal
 
 import (
