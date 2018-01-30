@@ -1,25 +1,25 @@
 package gocal
 
 var (
-	SUNDAY    = "SUN"
-	MONDAY    = "MON"
-	TUESDAY   = "TUE"
-	WEDNESDAY = "WED"
-	THURSDAY  = "THU"
-	FRIDAY    = "FRI"
-	SATURDAY  = "SAT"
+	Sunday    = "SUN"
+	Monday    = "MON"
+	Tuesday   = "TUE"
+	Wednesday = "WED"
+	Thursday  = "THU"
+	Friday    = "FRI"
+	Saturday  = "SAT"
 
-	DAYS = []string{
-		SUNDAY,
-		MONDAY,
-		TUESDAY,
-		WEDNESDAY,
-		THURSDAY,
-		FRIDAY,
-		SATURDAY,
+	Days = []string{
+		Sunday,
+		Monday,
+		Tuesday,
+		Wednesday,
+		Thursday,
+		Friday,
+		Saturday,
 	}
 
-	COLOR_DEFAULT   = "29"
-	COLOR_TODAY     = "31"
-	COLOR_HIGHLIGHT = "32"
+	ColorDefault   = "29"
+	ColorToday     = "31"
+	ColorHighlight = "32"
 )

@@ -1,3 +1,5 @@
+// !build +testing
+
 package gocal
 
 import (

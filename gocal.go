@@ -10,16 +10,19 @@ import (
 	"time"
 )
 
+//
+// Cal struct stores settings for the calendar
+//
 type Cal struct {
-	FromDate       time.Time
-	ToDate         time.Time
-	FirstDayOfWeek int
-	MarkToday      bool
-	HideHeader     bool
-	ColorDefault   string
-	ColorToday     string
-	ColorHighlight string
-	Marker         []time.Time
+	FromDate       time.Time   // Specify the month to display. If no value is passed. time.Now() will be used. NOTE: gocal will use the month - not the day. Passing 15th of August will be the same as 1st of August.
+	ToDate         time.Time   // Specify the last month to display. If no value is passed, only the month of Cal.FromDate is printed.
+	FirstDayOfWeek int         // By default, a week starts with Sunday. If you want to start with Monday (or any other day), you can set this value to 1 (for Monday).
+	MarkToday      bool        // Setting this flag to true, the todays date is highlighted in the Cal.ColorToday color.
+	HideHeader     bool        // Setting this flag to false will hide the output-header and display only the calendar without any other information.
+	ColorDefault   string      // Default: 29 Specify the default output color ([ANSI Color Codes](https://en.wikipedia.org/wiki/ANSI_escape_code#Colors))
+	ColorToday     string      // Default: 31 Specify the default output color ([ANSI Color Codes](https://en.wikipedia.org/wiki/ANSI_escape_code#Colors))
+	ColorHighlight string      // Default: 32 Specify the default output color ([ANSI Color Codes](https://en.wikipedia.org/wiki/ANSI_escape_code#Colors))
+	Marker         []time.Time // []time.Time slice of dates to highlight in the calendar.
 	monthsToPrint  []time.Time
 }
 
@@ -40,15 +43,15 @@ func (c *Cal) init() {
 	}
 
 	if c.ColorToday == "" {
-		c.ColorToday = COLOR_TODAY
+		c.ColorToday = ColorToday
 	}
 
 	if c.ColorDefault == "" {
-		c.ColorDefault = COLOR_DEFAULT
+		c.ColorDefault = ColorDefault
 	}
 
 	if c.ColorHighlight == "" {
-		c.ColorHighlight = COLOR_HIGHLIGHT
+		c.ColorHighlight = ColorHighlight
 	}
 
 	if len(c.Marker) > 0 {
@@ -68,7 +71,7 @@ func (c *Cal) init() {
 
 }
 
-// Print the calendar
+// Print the calendar using c attributes
 func (c *Cal) Print() error {
 	c.init()
 
@@ -136,10 +139,10 @@ func (c *Cal) printCalendar(weeks [][]time.Time) error {
 func (c *Cal) printWeekdayHeader() error {
 
 	var orderedWeekDays []string
-	orderedWeekDays = DAYS[c.FirstDayOfWeek:len(DAYS)]
+	orderedWeekDays = Days[c.FirstDayOfWeek:len(Days)]
 
 	if c.FirstDayOfWeek != 0 {
-		orderedWeekDays = append(orderedWeekDays, DAYS[0:c.FirstDayOfWeek]...)
+		orderedWeekDays = append(orderedWeekDays, Days[0:c.FirstDayOfWeek]...)
 	}
 
 	fmt.Println(strings.Join(orderedWeekDays, " "))
