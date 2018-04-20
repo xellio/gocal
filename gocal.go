@@ -68,26 +68,39 @@ func (c *Cal) init() {
 
 }
 
-// Print the calendar using c attributes
-func (c *Cal) Print() error {
+// Output returns the representation for the current calendar c
+func (c *Cal) Output() (string, error) {
 	c.init()
 
+	var out string
 	for _, month := range c.monthsToPrint {
 		if !c.HideHeader {
-			fmt.Println("---------------------------")
-			fmt.Println(month.Month(), month.Year())
-			fmt.Println("---------------------------")
+			out = out + fmt.Sprintln("---------------------------")
+			out = out + fmt.Sprintln(month.Month(), month.Year())
+			out = out + fmt.Sprintln("---------------------------")
 		}
 
 		weeks, err := c.calculateWeeks(month)
 		if err != nil {
-			return err
+			return "", err
 		}
-		if err = c.printCalendar(weeks); err != nil {
-			return err
-		}
-	}
 
+		calOut, err := c.printCalendar(weeks)
+		if err != nil {
+			return "", err
+		}
+		out = out + calOut
+	}
+	return out, nil
+}
+
+// Print the calendar using c attributes
+func (c *Cal) Print() error {
+	out, err := c.Output()
+	if err != nil {
+		return err
+	}
+	fmt.Println(out)
 	return nil
 }
 
@@ -123,17 +136,21 @@ func (c *Cal) calculateWeeks(firstOfMonth time.Time) ([][]time.Time, error) {
 }
 
 // Triggers the printing of the calendar header and the weeks
-func (c *Cal) printCalendar(weeks [][]time.Time) error {
-
-	if err := c.printWeekdayHeader(); err != nil {
-		return err
+func (c *Cal) printCalendar(weeks [][]time.Time) (string, error) {
+	calHeader, err := c.printWeekdayHeader()
+	if err != nil {
+		return "", err
 	}
-	c.printWeeks(weeks)
-	return nil
+	calWeeks, err := c.printWeeks(weeks)
+	if err != nil {
+		return "", err
+	}
+
+	return (calHeader + calWeeks), nil
 }
 
 // Print the calendar header
-func (c *Cal) printWeekdayHeader() error {
+func (c *Cal) printWeekdayHeader() (string, error) {
 
 	var orderedWeekDays []string
 	orderedWeekDays = Days[c.FirstDayOfWeek:len(Days)]
@@ -142,14 +159,13 @@ func (c *Cal) printWeekdayHeader() error {
 		orderedWeekDays = append(orderedWeekDays, Days[0:c.FirstDayOfWeek]...)
 	}
 
-	fmt.Println(strings.Join(orderedWeekDays, " "))
-	return nil
+	return fmt.Sprintln(strings.Join(orderedWeekDays, " ")), nil
 }
 
 // Print the weeks
-func (c *Cal) printWeeks(weeks [][]time.Time) error {
+func (c *Cal) printWeeks(weeks [][]time.Time) (string, error) {
 	today := time.Now()
-
+	var calWeeks string
 	for wc, days := range weeks {
 		for _, day := range days {
 			printFormat := "\033[" + c.ColorDefault + "m%s \033[0m"
@@ -174,12 +190,12 @@ func (c *Cal) printWeeks(weeks [][]time.Time) error {
 				printFormat = "\033[" + c.ColorToday + "m%s \033[0m"
 			}
 
-			fmt.Printf(printFormat, dayToPrint)
+			calWeeks = calWeeks + fmt.Sprintf(printFormat, dayToPrint)
 
 		}
-		fmt.Print("\n")
+		calWeeks = calWeeks + "\n"
 	}
-	return nil
+	return calWeeks, nil
 }
 
 // checks if the given time.Time is in the c.Marker slice
