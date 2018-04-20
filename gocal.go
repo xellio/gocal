@@ -16,6 +16,7 @@ type Cal struct {
 	FirstDayOfWeek int         // By default, a week starts with Sunday. If you want to start with Monday (or any other day), you can set this value to 1 (for Monday).
 	MarkToday      bool        // Setting this flag to true, the todays date is highlighted in the Cal.ColorToday color.
 	HideHeader     bool        // Setting this flag to false will hide the output-header and display only the calendar without any other information.
+	NoFormat       bool        // Do not append formatting to output
 	ColorDefault   string      // Default: 29 Specify the default output color ([ANSI Color Codes](https://en.wikipedia.org/wiki/ANSI_escape_code#Colors))
 	ColorToday     string      // Default: 31 Specify the default output color ([ANSI Color Codes](https://en.wikipedia.org/wiki/ANSI_escape_code#Colors))
 	ColorHighlight string      // Default: 32 Specify the default output color ([ANSI Color Codes](https://en.wikipedia.org/wiki/ANSI_escape_code#Colors))
@@ -168,7 +169,11 @@ func (c *Cal) printWeeks(weeks [][]time.Time) (string, error) {
 	var calWeeks string
 	for wc, days := range weeks {
 		for _, day := range days {
-			printFormat := "\033[" + c.ColorDefault + "m%s \033[0m"
+			printFormat := "%s "
+			if !c.NoFormat {
+				printFormat = "\033[" + c.ColorDefault + "m%s \033[0m"
+			}
+
 			dayToPrint := " " + strconv.Itoa(day.Day())
 
 			// first week-line, but day from previous month - print spaces instead of value
@@ -181,17 +186,20 @@ func (c *Cal) printWeeks(weeks [][]time.Time) (string, error) {
 			}
 
 			if len(c.Marker) > 0 && c.shouldBeMarked(day) {
-				printFormat = "\033[" + c.ColorHighlight + "m%s \033[0m"
+				if !c.NoFormat {
+					printFormat = "\033[" + c.ColorHighlight + "m%s \033[0m"
+				}
 			}
 
 			if c.MarkToday && today.Day() == day.Day() &&
 				today.Month() == day.Month() &&
 				today.Year() == day.Year() {
-				printFormat = "\033[" + c.ColorToday + "m%s \033[0m"
+				if !c.NoFormat {
+					printFormat = "\033[" + c.ColorToday + "m%s \033[0m"
+				}
 			}
 
 			calWeeks = calWeeks + fmt.Sprintf(printFormat, dayToPrint)
-
 		}
 		calWeeks = calWeeks + "\n"
 	}
